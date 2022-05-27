@@ -19,6 +19,7 @@ public class FrameExtensionsTests
     [TestCase(new[] { 7, 2 }, false)]
     [TestCase(new[] { 7, 3 }, true)]
     [TestCase(new[] { 4, 6 }, true)]
+    [TestCase(new[] { 0, 10 }, true)]
     [TestCase(new[] { 4 }, false)]
     [TestCase(new[] { 10 }, false)]
     [TestCase(new int[] { }, false)]
@@ -47,6 +48,18 @@ public class FrameExtensionsTests
         var frame = new Frame { Number = frameNumber };
         pins.ForEach(frame.Rolls.Add);
         var actual = frame.IsClosed();
+        actual.Should().Be(expected);
+    }
+
+    [TestCase(new[] { 4 }, false)]
+    [TestCase(new[] { 4, 6 }, false)]
+    [TestCase(new[] { 0, 10 }, false)]
+    [TestCase(new[] { 10 }, true)]
+    public void IsStrike(int[] pins, bool expected)
+    {
+        var frame = new Frame();
+        pins.ForEach(frame.Rolls.Add);
+        var actual = frame.IsStrike();
         actual.Should().Be(expected);
     }
 }
