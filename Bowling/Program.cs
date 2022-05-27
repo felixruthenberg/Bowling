@@ -7,8 +7,8 @@ var frames = CreateFrames();
 foreach (var pin in rolls)
 {
     Game.AddRoll(frames, pin);
-    Game.Display(frames);
-    Console.WriteLine("-------------------");
+    DisplayAdapter.DisplayFrames(frames);
+    DisplayAdapter.DisplaySeparator();
 }
 
 // TODO: ArgumentParser

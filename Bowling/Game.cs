@@ -18,7 +18,7 @@ internal static class Game
         AddCumulativeScore(frames);
     }
 
-    private static void AddFramesScores(IEnumerable<(Frame, IEnumerable<int?>)> framesAndNextPins)
+    private static void AddFramesScores(IEnumerable<(Frame, IEnumerable<int>)> framesAndNextPins)
     {
         // TODO: R# für Klammern auch bei einzeiliger foreach
         foreach (var (frame, nextPins) in framesAndNextPins) frame.Score = CalculateFrameScore(frame, nextPins);
@@ -36,10 +36,10 @@ internal static class Game
 
     // TODO: ScoreCalculator
 
-    private static int? CalculateFrameScore(Frame frame, IEnumerable<int?> nextPins)
+    private static int? CalculateFrameScore(Frame frame, IEnumerable<int> nextPins)
     {
         var frameSum = frame.Pins.Sum();
-        var relevantNumberNextFrames = frame switch
+        var relevantNumberNextPins = frame switch
         {
             _ when frame.IsLast() => 0,
             _ when frame.IsStrike() => 2,
@@ -47,23 +47,22 @@ internal static class Game
             _ => 0
         };
 
-        return frameSum + nextPins.Take(relevantNumberNextFrames).Sum();
+        return frameSum + nextPins.Take(relevantNumberNextPins).Sum();
     }
 
-    private static Frame FindFrameForRoll(Frame[] frames)
+    private static Frame FindFrameForRoll(IEnumerable<Frame> frames)
     {
         return frames.SkipWhile(FrameExtensions.IsClosed).First();
     }
 
 
 
-    private static IEnumerable<(Frame, IEnumerable<int?>)> GetFramesAndNextPins(Frame[] frames)
+    private static IEnumerable<(Frame, IEnumerable<int>)> GetFramesAndNextPins(Frame[] frames)
     {
         foreach (var frame in frames)
         {
             var pins = frames.Where(f => f.Number > frame.Number)
-                .SelectMany(f => f.Pins).Cast<int?>()
-                .Concat(Enumerable.Repeat((int?) null, 2)).Take(2).ToArray();
+                .SelectMany(f => f.Pins).ToArray();
 
             yield return (frame, pins);
         }
@@ -77,10 +76,4 @@ internal static class Game
 
 
     // TODO: DisplayAdapter
-    public static void Display(Frame[] frames)
-    {
-        foreach (var frame in frames)
-            Console.WriteLine(
-                $"{frame.Number:00}\t{string.Join("|", frame.Pins.Select(p => p.ToString("00"))).PadRight(9)}\t Score: {frame.Score:00}\tTotal: {frame.TotalScore:00}");
-    }
 }
