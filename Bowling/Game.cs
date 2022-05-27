@@ -93,6 +93,7 @@ internal static class Game
 
     private static bool IsClosed(Frame frame)
     {
+        // TODO: Use frame extensions
         return frame.Pins.Sum() == 10 && frame.Number < 10 || frame.Number < 10 && frame.Pins.Count == 2 ||
                frame.Number == 10 && frame.Pins.Count == 2 && frame.Pins.Sum() < 10 ||
                frame.Number == 10 && frame.Pins.Count == 3;
