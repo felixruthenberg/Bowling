@@ -20,8 +20,10 @@ internal static class Game
 
     private static void AddFramesScores(IEnumerable<(Frame, IEnumerable<int>)> framesAndNextPins)
     {
-        // TODO: R# für Klammern auch bei einzeiliger foreach
-        foreach (var (frame, nextPins) in framesAndNextPins) frame.Score = CalculateFrameScore(frame, nextPins);
+        foreach (var (frame, nextPins) in framesAndNextPins)
+        {
+            frame.Score = CalculateFrameScore(frame, nextPins);
+        }
     }
 
     private static void AddCumulativeScore(IEnumerable<Frame> frames)
@@ -54,7 +56,6 @@ internal static class Game
     {
         return frames.SkipWhile(FrameExtensions.IsClosed).First();
     }
-
 
 
     private static IEnumerable<(Frame, IEnumerable<int>)> GetFramesAndNextPins(Frame[] frames)
