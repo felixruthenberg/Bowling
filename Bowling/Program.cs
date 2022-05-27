@@ -1,5 +1,7 @@
 ﻿using Bowling;
 
+// TODO: Immutability?!
+
 var rolls = ParsePins(args); // TODO: roll in pin umbenennen
 var frames = CreateFrames();
 foreach (var pin in rolls)
