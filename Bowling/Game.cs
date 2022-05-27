@@ -41,9 +41,9 @@ internal static class Game
         var frameSum = frame.Pins.Sum();
         var relevantNumberNextFrames = frame switch
         {
-            _ when IsLast(frame) => 0,
-            _ when IsStrike(frame) => 2,
-            _ when IsSpare(frame) => 1,
+            _ when frame.IsLast() => 0,
+            _ when frame.IsStrike() => 2,
+            _ when frame.IsSpare() => 1,
             _ => 0
         };
 
@@ -52,24 +52,9 @@ internal static class Game
 
     private static Frame FindFrameForRoll(Frame[] frames)
     {
-        return frames.SkipWhile(IsClosed).First();
+        return frames.SkipWhile(FrameExtensions.IsClosed).First();
     }
 
-    // TODO: FrameExtensions
-    private static bool IsLast(Frame frame)
-    {
-        return frame.Number == 10;
-    }
-
-    private static bool IsSpare(Frame frame)
-    {
-        return frame.Pins.Count == 2 && frame.Pins.Sum() == 10;
-    }
-
-    private static bool IsStrike(Frame frame)
-    {
-        return frame.Pins.Count == 1 && frame.Pins.Sum() == 10;
-    }
 
 
     private static IEnumerable<(Frame, IEnumerable<int?>)> GetFramesAndNextPins(Frame[] frames)
@@ -90,14 +75,6 @@ internal static class Game
         frame.Pins.Add(pins);
     }
 
-
-    private static bool IsClosed(Frame frame)
-    {
-        // TODO: Use frame extensions
-        return frame.Pins.Sum() == 10 && frame.Number < 10 || frame.Number < 10 && frame.Pins.Count == 2 ||
-               frame.Number == 10 && frame.Pins.Count == 2 && frame.Pins.Sum() < 10 ||
-               frame.Number == 10 && frame.Pins.Count == 3;
-    }
 
     // TODO: DisplayAdapter
     public static void Display(Frame[] frames)
