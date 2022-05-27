@@ -90,6 +90,6 @@ internal static class Game
     {
         foreach (var frame in frames)
             Console.WriteLine(
-                $"{frame.Number}: {string.Join("|", frame.Pins)} Score: {frame.Score} Total: {frame.TotalScore}");
+                $"{frame.Number:00}\t{string.Join("|", frame.Pins.Select(p => p.ToString("00"))).PadRight(9)}\t Score: {frame.Score:00}\tTotal: {frame.TotalScore:00}");
     }
 }
