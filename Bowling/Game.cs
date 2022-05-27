@@ -22,7 +22,7 @@ internal static class Game
     {
         foreach (var (frame, nextPins) in framesAndNextPins)
         {
-            frame.Score = CalculateFrameScore(frame, nextPins);
+            frame.Score = ScoreCalculator.CalculateFrameScore(frame, nextPins);
         }
     }
 
@@ -38,20 +38,6 @@ internal static class Game
 
     // TODO: ScoreCalculator
 
-    private static int CalculateFrameScore(Frame frame, IEnumerable<int> nextPins)
-    {
-        var frameSum = frame.Rolls.Sum();
-        var relevantNumberNextPins = frame switch
-        {
-            _ when frame.IsLast() => 0,
-            _ when frame.IsStrike() => 2,
-            _ when frame.IsSpare() => 1,
-            _ => 0
-        };
-
-        return frameSum + nextPins.Take(relevantNumberNextPins).Sum();
-    }
-
     private static Frame FindFrameForRoll(IEnumerable<Frame> frames)
     {
         return frames.SkipWhile(FrameExtensions.IsClosed).First();
@@ -60,13 +46,11 @@ internal static class Game
 
     private static IEnumerable<(Frame, IEnumerable<int>)> GetFramesAndNextPins(Frame[] frames)
     {
-        foreach (var frame in frames)
-        {
-            var pins = frames.Where(f => f.Number > frame.Number)
-                .SelectMany(f => f.Rolls).ToArray();
-
-            yield return (frame, pins);
-        }
+        var query = from frame in frames
+            let nextFrames = frames.Where(f => f.Number > frame.Number)
+            let nextRolls = nextFrames.SelectMany(f => f.Rolls)
+            select (frame, nextRolls);
+        return query;
     }
 
 
