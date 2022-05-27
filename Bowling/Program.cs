@@ -2,7 +2,7 @@
 
 // TODO: Immutability?!
 
-var pins = ArgumentParser.ParsePins(args);
+var pins = ArgumentParser.ParseRolls(args);
 var frames = GameInitializer.CreateFrames();
 
 

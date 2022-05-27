@@ -2,7 +2,7 @@
 
 public static class ArgumentParser
 {
-    public static IEnumerable<int> ParsePins(IEnumerable<string> args)
+    public static IEnumerable<int> ParseRolls(IEnumerable<string> args)
     {
         return args.Select(int.Parse);
     }
