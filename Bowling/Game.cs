@@ -38,7 +38,7 @@ internal static class Game
 
     // TODO: ScoreCalculator
 
-    private static int? CalculateFrameScore(Frame frame, IEnumerable<int> nextPins)
+    private static int CalculateFrameScore(Frame frame, IEnumerable<int> nextPins)
     {
         var frameSum = frame.Pins.Sum();
         var relevantNumberNextPins = frame switch
@@ -74,7 +74,4 @@ internal static class Game
     {
         frame.Pins.Add(pins);
     }
-
-
-    // TODO: DisplayAdapter
 }
