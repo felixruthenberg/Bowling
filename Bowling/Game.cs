@@ -40,7 +40,7 @@ internal static class Game
 
     private static int CalculateFrameScore(Frame frame, IEnumerable<int> nextPins)
     {
-        var frameSum = frame.Pins.Sum();
+        var frameSum = frame.Rolls.Sum();
         var relevantNumberNextPins = frame switch
         {
             _ when frame.IsLast() => 0,
@@ -63,7 +63,7 @@ internal static class Game
         foreach (var frame in frames)
         {
             var pins = frames.Where(f => f.Number > frame.Number)
-                .SelectMany(f => f.Pins).ToArray();
+                .SelectMany(f => f.Rolls).ToArray();
 
             yield return (frame, pins);
         }
@@ -72,6 +72,6 @@ internal static class Game
 
     private static void AddPins(Frame frame, int pins)
     {
-        frame.Pins.Add(pins);
+        frame.Rolls.Add(pins);
     }
 }

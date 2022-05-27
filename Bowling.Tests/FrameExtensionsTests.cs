@@ -26,7 +26,7 @@ public class FrameExtensionsTests
     public void IsSpare(int[] pins, bool expected)
     {
         var frame = new Frame();
-        pins.ForEach(frame.Pins.Add);
+        pins.ForEach(frame.Rolls.Add);
         var actual = frame.IsSpare();
         actual.Should().Be(expected);
     }
@@ -45,7 +45,7 @@ public class FrameExtensionsTests
     public void IsClosed(int frameNumber, int[] pins, bool expected)
     {
         var frame = new Frame { Number = frameNumber };
-        pins.ForEach(frame.Pins.Add);
+        pins.ForEach(frame.Rolls.Add);
         var actual = frame.IsClosed();
         actual.Should().Be(expected);
     }
