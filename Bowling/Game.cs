@@ -2,6 +2,8 @@
 
 internal static class Game
 {
+    // TODO: Calculate / Add Score schärfen
+    // TODO: Pins / roll schärfen 
     public static void AddRoll(Frame[] frames, int pins)
     {
         var frame = FindFrameForRoll(frames);
@@ -12,38 +14,50 @@ internal static class Game
     private static void CalculateScores(Frame[] frames)
     {
         var framesAndNextPins = GetFramesAndNextPins(frames);
-        foreach (var (frame, pins1, pins2) in framesAndNextPins) CalculateFrameScore(frame, pins1, pins2);
+        AddFramesScores(framesAndNextPins);
         AddCumulativeScore(frames);
     }
 
-    private static void AddCumulativeScore(Frame[] frames)
+    private static void AddFramesScores(IEnumerable<(Frame, IEnumerable<int?>)> framesAndNextPins)
     {
-        var cum = 0;
+        foreach (var (frame, nextPins) in framesAndNextPins) frame.Score = CalculateFrameScore(frame, nextPins);
+    }
+
+    private static void AddCumulativeScore(IEnumerable<Frame> frames)
+    {
+        var cumulativeScore = 0;
         foreach (var frame in frames)
         {
-            cum += frame.Score ?? 0;
-            frame.TotalScore = cum;
+            cumulativeScore += frame.Score ?? 0;
+            frame.TotalScore = cumulativeScore;
         }
     }
 
-    private static void CalculateFrameScore(Frame frame, int? pins1, int? pins2)
+    // TODO: ScoreCalculator
+
+    private static int? CalculateFrameScore(Frame frame, IEnumerable<int?> nextPins)
     {
-        if (frame.Number == 10)
+        var frameSum = frame.Pins.Sum();
+        var relevantNumberNextFrames = frame switch
         {
-            frame.Score = frame.Pins.Sum();
-        }
-        else if (IsStrike(frame))
-        {
-            frame.Score = frame.Pins.Sum() + pins1 + pins2;
-        }
-        else if (IsSpare(frame))
-        {
-            frame.Score = frame.Pins.Sum() + pins1;
-        }
-        else
-        {
-            frame.Score = frame.Pins.Sum();
-        }
+            _ when IsLast(frame) => 0,
+            _ when IsStrike(frame) => 2,
+            _ when IsSpare(frame) => 1,
+            _ => 0
+        };
+
+        return frameSum + nextPins.Take(relevantNumberNextFrames).Sum();
+    }
+
+    private static Frame FindFrameForRoll(Frame[] frames)
+    {
+        return frames.SkipWhile(IsClosed).First();
+    }
+
+    // TODO: FrameExtensions
+    private static bool IsLast(Frame frame)
+    {
+        return frame.Number == 10;
     }
 
     private static bool IsSpare(Frame frame)
@@ -56,15 +70,16 @@ internal static class Game
         return frame.Pins.Count == 1 && frame.Pins.Sum() == 10;
     }
 
-    private static IEnumerable<(Frame, int?, int?)> GetFramesAndNextPins(Frame[] frames)
+
+    private static IEnumerable<(Frame, IEnumerable<int?>)> GetFramesAndNextPins(Frame[] frames)
     {
-        for (var i = 0; i < 10; i++)
+        foreach (var frame in frames)
         {
-            var frame = frames[i];
-            var pins = frames.Where(f => f.Number > frame.Number).SelectMany(f => f.Pins).Cast<int?>()
+            var pins = frames.Where(f => f.Number > frame.Number)
+                .SelectMany(f => f.Pins).Cast<int?>()
                 .Concat(Enumerable.Repeat((int?) null, 2)).Take(2).ToArray();
 
-            yield return (frame, pins[0], pins[1]);
+            yield return (frame, pins);
         }
     }
 
@@ -74,10 +89,6 @@ internal static class Game
         frame.Pins.Add(pins);
     }
 
-    private static Frame FindFrameForRoll(Frame[] frames)
-    {
-        return frames.SkipWhile(IsClosed).First();
-    }
 
     private static bool IsClosed(Frame frame)
     {
@@ -86,6 +97,7 @@ internal static class Game
                frame.Number == 10 && frame.Pins.Count == 3;
     }
 
+    // TODO: DisplayAdapter
     public static void Display(Frame[] frames)
     {
         foreach (var frame in frames)
