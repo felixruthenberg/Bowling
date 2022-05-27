@@ -24,10 +24,10 @@ public class FrameExtensionsTests
     [TestCase(new[] { 10 }, false)]
     [TestCase(new int[] { }, false)]
     [TestCase(new[] { 2, 5, 3 }, false)]
-    public void IsSpare(int[] pins, bool expected)
+    public void IsSpare(int[] rolls, bool expected)
     {
         var frame = new Frame();
-        pins.ForEach(frame.Rolls.Add);
+        rolls.ForEach(frame.Rolls.Add);
         var actual = frame.IsSpare();
         actual.Should().Be(expected);
     }
@@ -43,10 +43,10 @@ public class FrameExtensionsTests
     [TestCase(10, new[] { 4, 6 }, false)]
     [TestCase(10, new[] { 4, 5 }, true)]
     [TestCase(10, new[] { 4, 6, 7 }, true)]
-    public void IsClosed(int frameNumber, int[] pins, bool expected)
+    public void IsClosed(int frameNumber, int[] rolls, bool expected)
     {
         var frame = new Frame { Number = frameNumber };
-        pins.ForEach(frame.Rolls.Add);
+        rolls.ForEach(frame.Rolls.Add);
         var actual = frame.IsClosed();
         actual.Should().Be(expected);
     }
@@ -55,10 +55,10 @@ public class FrameExtensionsTests
     [TestCase(new[] { 4, 6 }, false)]
     [TestCase(new[] { 0, 10 }, false)]
     [TestCase(new[] { 10 }, true)]
-    public void IsStrike(int[] pins, bool expected)
+    public void IsStrike(int[] rolls, bool expected)
     {
         var frame = new Frame();
-        pins.ForEach(frame.Rolls.Add);
+        rolls.ForEach(frame.Rolls.Add);
         var actual = frame.IsStrike();
         actual.Should().Be(expected);
     }
