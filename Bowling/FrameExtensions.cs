@@ -25,7 +25,10 @@ public static class FrameExtensions
         var has3Rolls = frame.HasNumberOfRolls(3);
         var frameScoreLessThan10 = frame.Rolls.Sum() < 10;
 
-        if (isLast) return (has2Rolls && frameScoreLessThan10) || has3Rolls;
+        if (isLast)
+        {
+            return (has2Rolls && frameScoreLessThan10) || has3Rolls;
+        }
 
         return isStrike || has2Rolls;
     }
