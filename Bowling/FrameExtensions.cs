@@ -2,6 +2,11 @@
 
 public static class FrameExtensions
 {
+    public static void AddRoll(this Frame frame, int roll)
+    {
+        frame.Rolls.Add(roll);
+    }
+
     public static bool IsLast(this Frame frame)
     {
         return frame.Number == 10;
@@ -27,7 +32,7 @@ public static class FrameExtensions
 
         if (isLast)
         {
-            return (has2Rolls && frameScoreLessThan10) || has3Rolls;
+            return has2Rolls && frameScoreLessThan10 || has3Rolls;
         }
 
         return isStrike || has2Rolls;
