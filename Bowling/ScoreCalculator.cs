@@ -4,16 +4,16 @@ public static class ScoreCalculator
 {
     public static void CalculateScores(Frame[] frames)
     {
-        var framesAndNextPins = GetFramesAndNextPins(frames);
-        AddFramesScores(framesAndNextPins);
+        var framesAndNextRolls = GetFramesAndNextRolls(frames);
+        AddFramesScores(framesAndNextRolls);
         AddCumulativeScore(frames);
     }
 
-    private static void AddFramesScores(IEnumerable<(Frame, IEnumerable<int>)> framesAndNextPins)
+    private static void AddFramesScores(IEnumerable<(Frame, IEnumerable<int>)> framesAndNextRolls)
     {
-        foreach (var (frame, nextPins) in framesAndNextPins)
+        foreach (var (frame, nextRolls) in framesAndNextRolls)
         {
-            frame.Score = CalculateFrameScore(frame, nextPins);
+            frame.Score = CalculateFrameScore(frame, nextRolls);
         }
     }
 
@@ -27,7 +27,7 @@ public static class ScoreCalculator
         }
     }
 
-    private static IEnumerable<(Frame, IEnumerable<int>)> GetFramesAndNextPins(Frame[] frames)
+    private static IEnumerable<(Frame, IEnumerable<int>)> GetFramesAndNextRolls(Frame[] frames)
     {
         var query = from frame in frames
             let nextFrames = frames.Where(f => f.Number > frame.Number)
@@ -36,7 +36,7 @@ public static class ScoreCalculator
         return query;
     }
 
-    private static int CalculateFrameScore(Frame frame, IEnumerable<int> nextPins)
+    private static int CalculateFrameScore(Frame frame, IEnumerable<int> nextRolls)
     {
         var frameSum = frame.Rolls.Sum();
         var relevantNumberNextRolls = frame switch
@@ -47,6 +47,6 @@ public static class ScoreCalculator
             _ => 0
         };
 
-        return frameSum + nextPins.Take(relevantNumberNextRolls).Sum();
+        return frameSum + nextRolls.Take(relevantNumberNextRolls).Sum();
     }
 }
