@@ -4,7 +4,7 @@ namespace Bowling;
 
 internal static class Game
 {
-    public static void AddRolls(IEnumerable<int> rolls, Frame[] frames)
+    public static void AddRolls(Frame[] frames, IEnumerable<int> rolls)
     {
         rolls.ForEach(r => AddRoll(frames, r));
     }

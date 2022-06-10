@@ -1,6 +1,6 @@
 namespace Bowling;
 
-public static class DisplayAdapter
+public static class Ui
 {
     public static void DisplayFrames(IEnumerable<Frame> frames)
     {
